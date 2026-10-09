@@ -24,7 +24,11 @@ RUN pip install torch --index-url https://download.pytorch.org/whl/cpu
 
 COPY pyproject.toml README.md ./
 COPY openpronounce ./openpronounce
-RUN pip install "uvicorn[standard]==0.30.6" && pip install ".[app]" --no-deps
+RUN pip install "uvicorn[standard]==0.30.6" \
+    && pip install transformers>=4.30 librosa>=0.10 soundfile>=0.12 \
+       numpy scipy scikit-learn fastdtw phonemizer Levenshtein rapidfuzz gTTS \
+       python-multipart fastapi \
+    && pip install ".[app]" --no-deps
 
 RUN python -c "from openpronounce.speech import _load_models; _load_models()" \
     && python -c "from openpronounce.phones import _load_model; _load_model()"
